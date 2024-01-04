@@ -1,49 +1,55 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
+// Define a custom dictionary of words and their corrections
+const customDictionary = {
+  teh: "the",
+  wrok: "work",
+  fot: "for",
+  exampl: "example"
+  // Add more word-correction pairs as needed
+};
 
-export default function App() {
-  const customDictionary = {
-    teh: "the",
+function SpellCheckApp() {
+  const [inputText, setInputText] = useState("");
+  const [suggestedText, setSuggestedText] = useState("");
 
-    wrok: "work",
+  const handleInputChange = (e) => {
+    const text = e.target.value;
+    setInputText(text);
 
-    fot: "for",
-
-    exampl: "example",
-  };
-  const [text, setText] = useState("");
-  const [suggestions, setSuggestions] = useState("");
-  const handleChange = (e) => {
-    let input = e.target.value;
-    setText(input);
-    const words = input.split(" ");
-    const corrected = words.map((item) => {
-      const correctedword = customDictionary[item.toLowerCase()];
-      return correctedword || item;
+    // Implement a basic spelling check and correction
+    const words = text.split(" ");
+    const correctedWords = words.map((word) => {
+      const correctedWord = customDictionary[word.toLowerCase()];
+      return correctedWord || word;
     });
-    const correctedtext = corrected.join(" ");
-    const firstCorrection = corrected.find(
+
+    const correctedText = correctedWords.join(" ");
+
+    // Set the suggested text (first corrected word)
+    const firstCorrection = correctedWords.find(
       (word, index) => word !== words[index]
     );
-
-    setSuggestions(firstCorrection || "");
+    setSuggestedText(firstCorrection || "");
   };
 
   return (
     <div>
       <h1>Spell Check and Auto-Correction</h1>
       <textarea
-        value={text}
-        onChange={handleChange}
+        value={inputText}
+        onChange={handleInputChange}
         placeholder="Enter text..."
         rows={5}
         cols={40}
       />
-      {suggestions && (
+      {suggestedText && (
         <p>
-          Did you mean: <strong>{suggestions}</strong>
+          Did you mean: <strong>{suggestedText}</strong>?
         </p>
       )}
     </div>
   );
 }
+
+export default SpellCheckApp;
